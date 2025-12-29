@@ -11,9 +11,5 @@ public class LoginController {
         return "login"; // Trả về file login.html (Thymeleaf)
     }
 
-    @GetMapping("/admin")
-    public String showAdminPage() {
-        // Chỉ người dùng có quyền ADMIN mới vào được đây
-        return "admin/index";
-    }
+
 }

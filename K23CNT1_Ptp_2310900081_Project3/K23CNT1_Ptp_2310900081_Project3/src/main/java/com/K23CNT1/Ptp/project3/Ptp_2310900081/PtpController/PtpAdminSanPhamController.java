@@ -2,6 +2,7 @@ package com.K23CNT1.Ptp.project3.Ptp_2310900081.PtpController;
 
 import com.K23CNT1.Ptp.project3.Ptp_2310900081.PtpEntity.PtpSanPham;
 import com.K23CNT1.Ptp.project3.Ptp_2310900081.PtpService.PtpSanPhamService;
+// Đảm bảo bạn đã import đúng Service cho Danh Mục và Thương Hiệu
 import com.K23CNT1.Ptp.project3.Ptp_2310900081.PtpService.PtpDanhMucService;
 import com.K23CNT1.Ptp.project3.Ptp_2310900081.PtpService.PtpThuongHieuService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,32 +30,29 @@ public class PtpAdminSanPhamController {
     // 1. Hiển thị danh sách (READ)
     @GetMapping("")
     public String hienThiDanhSach(Model model) {
-        // SỬA: Dùng tên hàm 'layDanhSachSanPham' khớp với Service
-        // SỬA: Dùng tên biến 'listSanPham' khớp với file danhsach.html
-        model.addAttribute("listSanPham", sanPhamService.layDanhSachSanPham());
+        // SỬA: Đổi thành 'layTatCaSanPham' để khớp với Service
+        model.addAttribute("listSanPham", sanPhamService.layTatCaSanPham());
         return "admin/sanpham/danhsach";
     }
 
-    // 2. Hiển thị form Thêm mới & Sửa (CREATE & UPDATE)
-    // SỬA: Đổi '/them' thành '/them-moi' để khớp với nút bấm trong danhsach.html
+    // 2. Hiển thị form Thêm mới & Sửa
     @GetMapping({"/them-moi", "/sua/{id}"})
     public String hienThiForm(@PathVariable(required = false) Long id, Model model) {
 
-        // Đổ dữ liệu vào Dropdown
+        // Đổ dữ liệu vào Dropdown (Đảm bảo Service DanhMuc/ThuongHieu đã có các hàm này)
         model.addAttribute("listDanhMuc", danhMucService.layTatCaDanhMuc());
         model.addAttribute("listThuongHieu", thuongHieuService.layTatCaThuongHieu());
 
-        // Logic phân biệt Thêm hay Sửa
         if (id != null) {
-            // Trường hợp Sửa: Lấy dữ liệu cũ
+            // Trường hợp Sửa
             Optional<PtpSanPham> sp = sanPhamService.laySanPhamTheoId(id);
             if (sp.isPresent()) {
                 model.addAttribute("sanPham", sp.get());
             } else {
-                return "redirect:/admin/sanpham"; // ID không tồn tại thì quay về
+                return "redirect:/admin/sanpham";
             }
         } else {
-            // Trường hợp Thêm mới: Tạo object rỗng
+            // Trường hợp Thêm mới
             model.addAttribute("sanPham", new PtpSanPham());
         }
 
@@ -65,10 +63,10 @@ public class PtpAdminSanPhamController {
     @PostMapping("/luu")
     public String luuSanPham(
             @ModelAttribute("sanPham") PtpSanPham sanPham,
+            // Quan trọng: Tên 'anhFile' phải khớp với name="anhFile" bên file HTML
             @RequestParam("anhFile") MultipartFile anhFile,
             RedirectAttributes ra) {
 
-        // SỬA: Dùng tên hàm 'luuSanPham' khớp với Service mới nhất
         sanPhamService.luuSanPham(sanPham, anhFile);
 
         ra.addFlashAttribute("thongBao", "Thao tác thành công!");

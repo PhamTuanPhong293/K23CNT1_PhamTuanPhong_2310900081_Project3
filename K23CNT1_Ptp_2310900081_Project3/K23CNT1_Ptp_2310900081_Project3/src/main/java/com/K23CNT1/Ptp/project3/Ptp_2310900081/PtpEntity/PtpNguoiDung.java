@@ -3,6 +3,7 @@ package com.K23CNT1.Ptp.project3.Ptp_2310900081.PtpEntity;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,6 +16,7 @@ import java.util.List;
 @Table(name = "PtpNguoiDung") // Ánh xạ tới tên bảng trong MySQL
 @Data // Lombok: Tự động tạo Getter, Setter, v.v.
 @NoArgsConstructor // Lombok: Constructor không tham số (cần cho JPA)
+@AllArgsConstructor
 public class PtpNguoiDung implements UserDetails {
 
     // Khóa chính: PtpId (BIGINT -> Long)

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<nav th:fragment="header" class="navbar navbar-expand-lg navbar-dark bg-dark mb-4 shadow">
+    <div class="container">
+        <a class="navbar-brand fw-bold" href="/admin/sanpham">
+            <i class="fa-solid fa-shoe-prints me-2"></i>PTP ADMIN
+        </a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto">
+
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin">
+                        <i class="fa-solid fa-house me-1"></i> Dashboard
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin/sanpham">
+                        <i class="fa-solid fa-box me-1"></i> Sản Phẩm
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin/danhmuc">
+                        <i class="fa-solid fa-list me-1"></i> Danh Mục
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin/donhang">
+                        <i class="fa-solid fa-file-invoice-dollar me-1"></i> Đơn Hàng
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin/khachhang">
+                        <i class="fa-solid fa-users me-1"></i> Khách Hàng
+                    </a>
+                </li>
+            </ul>
+
+            <div class="d-flex align-items-center">
+                <span class="text-white me-3 small">
+                    <i class="fa-solid fa-user-shield"></i> Xin chào, Admin
+                </span>
+                <a href="/logout" class="btn btn-sm btn-danger fw-bold">
+                    <i class="fa-solid fa-right-from-bracket"></i> Đăng xuất
+                </a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+</body>
+</html>

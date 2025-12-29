@@ -7,9 +7,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
@@ -18,16 +18,18 @@ public class PtpSecurityConfig {
     @Autowired
     private PtpNguoiDungService nguoiDungService;
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    // 👇 1. TIÊM (INJECT) HANDLER VỪA TẠO VÀO ĐÂY
+    @Autowired
+    private PtpLoginSuccessHandler loginSuccessHandler;
 
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider auth = new DaoAuthenticationProvider();
         auth.setUserDetailsService(nguoiDungService);
-        auth.setPasswordEncoder(passwordEncoder());
+        auth.setPasswordEncoder(passwordEncoder);
         return auth;
     }
 
@@ -35,22 +37,23 @@ public class PtpSecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
-                        // 1. Cho phép truy cập tự do vào các file tĩnh (css, js, ảnh) và trang login
-                        .requestMatchers("/css/**", "/js/**", "/images/**", "/login", "/register").permitAll()
-                        // 2. Chỉ ADMIN mới vào được trang quản trị
+                        .requestMatchers("/", "/css/**", "/js/**", "/images/**", "/login", "/register", "/gio-hang/**").permitAll()
                         .requestMatchers("/admin/**").hasAnyAuthority("ADMIN")
-                        // 3. Các trang còn lại phải đăng nhập mới xem được
                         .anyRequest().authenticated()
                 )
                 .formLogin(login -> login
-                        .loginPage("/login") // Đường dẫn tới trang giao diện đăng nhập
-                        .loginProcessingUrl("/login") // Link submit form (Spring tự xử lý)
-                        .defaultSuccessUrl("/admin/sanpham", true) // Đăng nhập thành công thì về đây
-                        .failureUrl("/login?error=true") // Sai mật khẩu thì về đây
+                        .loginPage("/login")
+                        .loginProcessingUrl("/login")
+
+                        // 👇 2. THAY THẾ defaultSuccessUrl BẰNG successHandler
+                        // .defaultSuccessUrl("/admin/sanpham", true) <--- XÓA HOẶC COMMENT DÒNG NÀY
+                        .successHandler(loginSuccessHandler) // <--- THÊM DÒNG NÀY
+
+                        .failureUrl("/login?error=true")
                         .permitAll()
                 )
                 .logout(logout -> logout
-                        .logoutUrl("/logout")
+                        .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                         .logoutSuccessUrl("/login?logout=true")
                         .permitAll()
                 );

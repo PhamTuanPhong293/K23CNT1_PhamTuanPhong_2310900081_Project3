@@ -5,71 +5,208 @@
     <title>Quản lý Sản Phẩm - Admin</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            background-color: #f4f6f9;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        /* Card bao quanh bảng */
+        .main-card {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            background: white;
+            overflow: hidden;
+        }
+
+        /* Header của Card */
+        .card-header {
+            background-color: #fff;
+            border-bottom: 2px solid #f0f0f0;
+            padding: 20px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #2c3e50;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Nút Thêm Mới */
+        .btn-add {
+            background-color: #3498db;
+            color: white;
+            border-radius: 8px;
+            padding: 10px 20px;
+            font-weight: 500;
+            transition: all 0.3s;
+            border: none;
+            text-decoration: none; /* Bỏ gạch chân */
+        }
+        .btn-add:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(52, 152, 219, 0.3);
+            color: white;
+        }
+
+        /* Bảng dữ liệu */
+        .table-custom th {
+            background-color: #f8f9fa;
+            color: #7f8c8d;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 13px;
+            border-bottom: 2px solid #e9ecef;
+            padding: 15px;
+        }
+
+        .table-custom td {
+            padding: 15px;
+            vertical-align: middle;
+            color: #2c3e50;
+            border-bottom: 1px solid #f1f1f1;
+        }
+
+        .table-custom tr:hover td {
+            background-color: #fcfcfc;
+        }
+
+        /* Ảnh sản phẩm trong bảng */
+        .product-img {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 1px solid #eee;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        /* Giá tiền */
+        .price-tag {
+            font-weight: 700;
+            color: #e74c3c;
+        }
+
+        /* Các nút hành động (Sửa/Xóa) */
+        .action-btn {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 3px;
+            transition: all 0.2s;
+            color: white;
+            text-decoration: none;
+        }
+
+        .btn-edit {
+            background-color: #f1c40f;
+        }
+        .btn-edit:hover {
+            background-color: #f39c12;
+            transform: scale(1.1);
+            color: white;
+        }
+
+        .btn-delete {
+            background-color: #e74c3c;
+        }
+        .btn-delete:hover {
+            background-color: #c0392b;
+            transform: scale(1.1);
+            color: white;
+        }
+
+        /* Badge trạng thái */
+        .badge-status {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        .bg-active { background-color: #d4edda; color: #155724; }
+        .bg-inactive { background-color: #f8d7da; color: #721c24; }
+    </style>
 </head>
-<body class="bg-light">
+<body class="bg-light"> <div th:replace="~{admin/fragments/navbar :: header}"></div>
 
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
-    <div class="container">
-        <a class="navbar-brand" href="#">QUẢN TRỊ PTP SHOES</a>
-        <div class="d-flex">
-            <span class="text-white me-3">Xin chào, Admin</span>
-            <a href="/logout" class="btn btn-sm btn-danger">Đăng xuất</a>
+<div class="container-fluid px-4"> <div th:if="${thongBao}" class="alert alert-success alert-dismissible fade show mt-3" role="alert">
+    <i class="fa-solid fa-check-circle me-2"></i> <span th:text="${thongBao}"></span>
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+</div>
+
+    <div class="main-card mt-4"> <div class="card-header">
+        <div class="card-title">
+            <i class="fa-solid fa-list text-secondary"></i> Danh Sách Sản Phẩm
         </div>
+        <a href="/admin/sanpham/them-moi" class="btn-add">
+            <i class="fa-solid fa-plus"></i> Thêm Mới
+        </a>
     </div>
-</nav>
 
-<div class="container">
-    <div class="card shadow-sm">
-        <div class="card-header bg-white d-flex justify-content-between align-items-center">
-            <h4 class="mb-0 text-primary">Danh Sách Sản Phẩm</h4>
-            <a href="/admin/sanpham/them-moi" class="btn btn-success">
-                <i class="fa-solid fa-plus"></i> Thêm Mới
-            </a>
-        </div>
-
-        <div class="card-body">
-            <table class="table table-bordered table-hover">
-                <thead class="table-primary text-center">
+        <div class="card-body p-0">
+            <table class="table table-custom mb-0 w-100">
+                <thead>
                 <tr>
-                    <th>ID</th>
-                    <th>Hình Ảnh</th>
-                    <th>Tên Sản Phẩm</th>
-                    <th>Giá Bán</th>
-                    <th>Danh Mục</th>
-                    <th>Trạng Thái</th>
-                    <th>Hành Động</th>
+                    <th class="text-center" width="5%">ID</th>
+                    <th class="text-center" width="10%">Hình Ảnh</th>
+                    <th width="25%">Tên Sản Phẩm</th>
+                    <th width="15%" class="text-end">Giá Bán</th>
+                    <th class="text-center" width="15%">Danh Mục</th>
+                    <th class="text-center" width="15%">Trạng Thái</th>
+                    <th class="text-center" width="15%">Hành Động</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr th:each="sp : ${listSanPham}">
-                    <td class="text-center" th:text="${sp.id}">1</td>
+                    <td class="text-center text-muted" th:text="${sp.id}">#1</td>
+
                     <td class="text-center">
                         <img th:if="${sp.anhChinhUrl}" th:src="@{${sp.anhChinhUrl}}"
-                             alt="Ảnh SP" style="width: 60px; height: 60px; object-fit: cover; border-radius: 5px;">
-                        <span th:unless="${sp.anhChinhUrl}" class="text-muted">No Image</span>
-                    </td>
-                    <td th:text="${sp.tenSanPham}">Nike Air Jordan</td>
-
-                    <td class="text-end fw-bold text-danger"
-                        th:text="${#numbers.formatDecimal(sp.giaBan, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'">
-                        2.000.000 VNĐ
+                             class="product-img" alt="Ảnh SP">
+                        <span th:unless="${sp.anhChinhUrl}" class="text-muted small">No Image</span>
                     </td>
 
-                    <td class="text-center" th:text="${sp.ptpDanhMuc != null ? sp.ptpDanhMuc.tenDanhMuc : 'Chưa có'}">
-                        Giày Nam
+                    <td class="fw-bold" th:text="${sp.tenSanPham}">Nike Air Jordan</td>
+
+                    <td class="text-end price-tag"
+                        th:text="${#numbers.formatDecimal(sp.giaBan, 0, 'COMMA', 0, 'POINT')} + ' đ'">
+                        2.000.000 đ
                     </td>
 
                     <td class="text-center">
-                        <span th:if="${sp.trangThaiHoatDong}" class="badge bg-success">Hiển thị</span>
-                        <span th:unless="${sp.trangThaiHoatDong}" class="badge bg-secondary">Tạm ẩn</span>
+                            <span class="badge bg-light text-dark border"
+                                  th:text="${sp.danhMuc != null ? sp.danhMuc.tenDanhMuc : '---'}">
+                                Giày Nam
+                            </span>
                     </td>
 
                     <td class="text-center">
-                        <a th:href="@{/admin/sanpham/sua/{id}(id=${sp.id})}" class="btn btn-sm btn-warning me-1">
-                            <i class="fa-solid fa-pen-to-square"></i>
+                        <span th:if="${sp.trangThaiHoatDong}" class="badge-status bg-active">Hiển thị</span>
+                        <span th:unless="${sp.trangThaiHoatDong}" class="badge-status bg-inactive">Tạm ẩn</span>
+                    </td>
+
+                    <td class="text-center">
+                        <a th:href="@{/admin/sanpham/sua/{id}(id=${sp.id})}"
+                           class="action-btn btn-edit" title="Sửa">
+                            <i class="fa-solid fa-pen"></i>
                         </a>
+
                         <a th:href="@{/admin/sanpham/xoa/{id}(id=${sp.id})}"
-                           class="btn btn-sm btn-danger"
+                           class="action-btn btn-delete" title="Xóa"
                            onclick="return confirm('Bạn có chắc chắn muốn xóa sản phẩm này?');">
                             <i class="fa-solid fa-trash"></i>
                         </a>
@@ -78,12 +215,14 @@
                 </tbody>
             </table>
 
-            <div th:if="${listSanPham.empty}" class="alert alert-info text-center">
-                Chưa có sản phẩm nào trong hệ thống. Hãy thêm mới!
+            <div th:if="${listSanPham.empty}" class="p-5 text-center text-muted">
+                <i class="fa-solid fa-box-open fa-3x mb-3"></i>
+                <p>Chưa có sản phẩm nào. Hãy thêm mới ngay!</p>
             </div>
         </div>
     </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
